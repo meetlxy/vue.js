@@ -68,3 +68,85 @@ var app7=new Vue({
         ]
     }
 })
+
+var app8=new Vue({
+    el:'#app-8',
+    data:{
+        message:'Hello'
+    },
+    computed:{
+        //计算属性的getter函数
+        reverseMessage:function(){
+            //'this'指向app8实例
+            return this.message.split('').reverse('').join('') 
+        }
+    }
+
+})
+
+
+var app9=new Vue({
+    el:'#app-9',
+    data:{
+        message:'World'
+    },
+   methods:{
+       reverseMessage(){
+           return this.message.split('').reverse('').join('')       }
+   }
+
+})
+
+var app10=new Vue({
+    el:'#app-10',
+    data:{
+        firstName:'Foo',
+        lastName:'Bar'
+    },
+    computed:{
+        fullName:{
+        //getter
+        get: function(){
+            return this.firstName+' '+this.lastName
+        },
+        //setter
+        set: function(newValue){
+            var names=newValue.split(' ')
+            this.firstName=names[0]
+            this.lastName=names[names.length-1]
+        }
+    }
+}
+})
+
+var watchExampleVM=new Vue({
+    el:'#watch-example',
+    data:{
+        question:' ',
+        answer:' I can not give you an answer until you ask a question ！'
+    },
+    watch:{
+        //如果‘question’发生改变，这个函数就会运行
+        question:function(newQuestion,oldQuestion){
+            this.answer='Wating for you to stop typing……'
+            this.debouncedGetAnswer()
+        }
+    },
+    created:function(){
+        this.debouncedGetAnswer=_.debounce(this.getAnswer,500)
+    },
+    methods:{
+        getAnswer:function(){
+            if(this.question.indexOf('?')=== -1){
+                this.answer='Question usually contain a question mark. ;-)'
+                return
+            }
+            this.answer='Thinking……'
+            var vm=this
+            axios.get('http://yesno.wtf/api')
+                .then(function(response){
+                    vm.answer='Error! Could not reach the Api. '+ error
+                })
+        }
+    }
+})
